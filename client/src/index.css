@@ -1,0 +1,220 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* DOWNTIME — Dark-first lifestyle event discovery
+   Art direction: cinematic dark, warm amber accent, teal CTA
+   Feels like a lifestyle magazine, not a SaaS tool */
+
+/* LIGHT MODE */
+:root {
+  --button-outline: rgba(0,0,0, .10);
+  --badge-outline: rgba(0,0,0, .05);
+  --opaque-button-border-intensity: -8;
+  --elevate-1: rgba(0,0,0, .03);
+  --elevate-2: rgba(0,0,0, .08);
+  --background: 40 20% 97%;
+  --foreground: 240 10% 10%;
+  --border: 40 8% 88%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 10%;
+  --card-border: 40 8% 92%;
+  --sidebar: 240 8% 96%;
+  --sidebar-foreground: 240 10% 10%;
+  --sidebar-border: 40 8% 90%;
+  --sidebar-primary: 166 100% 42%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 40 20% 93%;
+  --sidebar-accent-foreground: 240 10% 10%;
+  --sidebar-ring: 166 100% 42%;
+  --popover: 40 20% 97%;
+  --popover-foreground: 240 10% 10%;
+  --popover-border: 40 8% 88%;
+  --primary: 166 100% 42%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 40 15% 92%;
+  --secondary-foreground: 240 10% 10%;
+  --muted: 40 10% 93%;
+  --muted-foreground: 240 5% 46%;
+  --accent: 38 92% 55%;
+  --accent-foreground: 240 10% 10%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 98%;
+  --input: 40 8% 82%;
+  --ring: 166 100% 42%;
+  --chart-1: 166 100% 42%;
+  --chart-2: 38 92% 55%;
+  --chart-3: 262 83% 48%;
+  --chart-4: 173 58% 39%;
+  --chart-5: 27 87% 55%;
+  --font-sans: 'General Sans', 'Inter', sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-mono: 'JetBrains Mono', Menlo, monospace;
+  --radius: .625rem;
+  --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
+  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.04);
+  --shadow-sm: 0px 2px 4px -1px hsl(0 0% 0% / 0.06);
+  --shadow: 0px 4px 8px -2px hsl(0 0% 0% / 0.08);
+  --shadow-md: 0px 6px 16px -4px hsl(0 0% 0% / 0.10);
+  --shadow-lg: 0px 12px 32px -8px hsl(0 0% 0% / 0.12);
+  --shadow-xl: 0px 20px 40px -10px hsl(0 0% 0% / 0.16);
+  --shadow-2xl: 0px 32px 64px -16px hsl(0 0% 0% / 0.20);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --primary-border: hsl(var(--primary));
+  --secondary-border: hsl(var(--secondary));
+  --muted-border: hsl(var(--muted));
+  --accent-border: hsl(var(--accent));
+  --destructive-border: hsl(var(--destructive));
+}
+
+/* DARK MODE — Primary experience */
+.dark {
+  --button-outline: rgba(255,255,255, .10);
+  --badge-outline: rgba(255,255,255, .06);
+  --opaque-button-border-intensity: 9;
+  --elevate-1: rgba(255,255,255, .04);
+  --elevate-2: rgba(255,255,255, .09);
+  --background: 240 12% 5%;
+  --foreground: 40 8% 94%;
+  --border: 240 6% 14%;
+  --card: 240 10% 7%;
+  --card-foreground: 40 8% 94%;
+  --card-border: 240 6% 12%;
+  --sidebar: 240 10% 8%;
+  --sidebar-foreground: 40 8% 94%;
+  --sidebar-border: 240 6% 14%;
+  --sidebar-primary: 166 72% 47%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 8% 14%;
+  --sidebar-accent-foreground: 40 8% 94%;
+  --sidebar-ring: 166 72% 47%;
+  --popover: 240 10% 9%;
+  --popover-foreground: 40 8% 94%;
+  --popover-border: 240 6% 16%;
+  --primary: 166 72% 47%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 240 8% 14%;
+  --secondary-foreground: 40 8% 94%;
+  --muted: 240 6% 16%;
+  --muted-foreground: 40 4% 58%;
+  --accent: 38 90% 58%;
+  --accent-foreground: 240 12% 5%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 98%;
+  --input: 240 6% 22%;
+  --ring: 166 72% 47%;
+  --chart-1: 166 72% 55%;
+  --chart-2: 38 90% 62%;
+  --chart-3: 262 83% 68%;
+  --chart-4: 173 58% 55%;
+  --chart-5: 27 87% 65%;
+  --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
+  --shadow-sm: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
+  --shadow: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
+
+  --sidebar-primary-border: hsl(var(--sidebar-primary));
+  --sidebar-accent-border: hsl(var(--sidebar-accent));
+  --primary-border: hsl(var(--primary));
+  --secondary-border: hsl(var(--secondary));
+  --muted-border: hsl(var(--muted));
+  --accent-border: hsl(var(--accent));
+  --destructive-border: hsl(var(--destructive));
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+/* Fraunces — editorial display font */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&display=swap');
+/* General Sans via Fontshare */
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap');
+/* JetBrains Mono */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* Utility classes for the editorial feel */
+.font-display {
+  font-family: 'Fraunces', Georgia, serif;
+}
+
+.font-mono-ui {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8125rem;
+  letter-spacing: -0.01em;
+}
+
+/* Smooth card entrance animation */
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-card-enter {
+  animation: cardEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Stagger children */
+.stagger-children > * {
+  opacity: 0;
+  animation: cardEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+
+/* Amber pulse for save action */
+@keyframes amberPulse {
+  0% { box-shadow: 0 0 0 0 hsl(38 92% 55% / 0.4); }
+  70% { box-shadow: 0 0 0 10px hsl(38 92% 55% / 0); }
+  100% { box-shadow: 0 0 0 0 hsl(38 92% 55% / 0); }
+}
+
+.animate-amber-pulse {
+  animation: amberPulse 0.6s ease-out;
+}
+
+/* Horizontal scroll pills */
+.scroll-pills {
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scroll-pills::-webkit-scrollbar {
+  display: none;
+}
+
+@layer utilities {
+  input[type="search"]::-webkit-search-cancel-button {
+    @apply hidden;
+  }
+  [contenteditable][data-placeholder]:empty::before {
+    content: attr(data-placeholder);
+    color: hsl(var(--muted-foreground));
+    pointer-events: none;
+  }
+}
