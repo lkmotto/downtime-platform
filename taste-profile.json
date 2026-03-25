@@ -1,0 +1,110 @@
+{
+  "user": {
+    "name": "Luke Motto",
+    "location": {
+      "city": "Roanoke",
+      "state": "TX",
+      "zip": "76262",
+      "metro": "Dallas-Fort Worth",
+      "maxDriveMinutes": {
+        "weekday": 60,
+        "weekend": 120,
+        "travel": 480
+      }
+    }
+  },
+  "interests": {
+    "highPriority": [
+      "motorsports (drifting, car shows, F1, NASCAR, Formula Drift, Lone Star Drift)",
+      "drone photography and cinematography",
+      "automotive events (Cars & Coffee, Goodguys, Xtreme Xperience)",
+      "wrestling and grappling (WWE, open mats)",
+      "UFC and combat sports",
+      "art galleries (especially Kush Fine Art, surrealism)",
+      "outdoor photography opportunities",
+      "film screenings and filmmaker events"
+    ],
+    "mediumPriority": [
+      "live music (jazz, blues, festivals)",
+      "BBQ and Texas cuisine (gluten-free friendly)",
+      "farmers markets and food events",
+      "comedy shows",
+      "hiking and canyon photography",
+      "water sports (kayaking, jet skiing)",
+      "night photography (cityscapes, neon, murals)"
+    ],
+    "lowPriority": [
+      "general festivals",
+      "fitness events",
+      "tech meetups"
+    ]
+  },
+  "dietary": {
+    "preferences": ["gluten-free", "dairy-free", "high-calorie", "high-protein"],
+    "budgetPerPerson": "$15-30",
+    "favoriteTypes": ["BBQ", "Mexican", "Asian fusion", "Mediterranean"]
+  },
+  "cameraContext": {
+    "gear": ["Lumix S5IIX", "drone", "GoPro/action cam", "underwater housing"],
+    "styles": ["automotive photography", "aerial/drone cinematography", "street photography", "food photography", "architectural photography", "event documentation", "vlogs"],
+    "priorities": [
+      "drone-friendly locations",
+      "golden hour opportunities",
+      "unique visual subjects",
+      "behind-the-scenes access",
+      "smoke/fire/action moments"
+    ]
+  },
+  "scenarios": {
+    "dateNight": {
+      "budget": "$50-80 total",
+      "vibes": ["intimate", "camera-worthy", "unique experience", "not basic"],
+      "preferences": ["outdoor when weather is good", "art + food combo", "live music"]
+    },
+    "solo": {
+      "focus": ["photography opportunities", "fitness/training", "self-improvement", "exploring new areas"],
+      "openTo": ["meetups with other creators", "open mats", "gallery walks"]
+    },
+    "weekendAdventure": {
+      "driveRadius": "2-3 hours from DFW",
+      "types": ["motorsports events", "state parks", "festivals", "car shows"],
+      "bringCamera": true
+    },
+    "travel": {
+      "style": "photography expedition",
+      "interests": ["national parks", "unique landscapes", "motorsport events", "cultural districts"],
+      "budget": "budget-conscious"
+    }
+  },
+  "scoring": {
+    "weights": {
+      "categoryMatch": 25,
+      "cameraValue": 25,
+      "priceValue": 20,
+      "proximity": 15,
+      "uniqueness": 15
+    },
+    "bonuses": {
+      "freeEvent": 10,
+      "droneFriendly": 8,
+      "outdoorGoldenHour": 5,
+      "newVenueNeverVisited": 5
+    }
+  },
+  "sources": [
+    "bandsintown.com (concerts near DFW)",
+    "eventbrite.com (events near 76262)",
+    "allevents.in (DFW area)",
+    "yelp.com (restaurants, activities)",
+    "meetup.com (photography, drone, wrestling meetups)",
+    "texasmonthly.com (food, events)",
+    "dallasmorningnews.com (local events)",
+    "dallasobserver.com (music, food, culture)",
+    "facebook events (car shows, drift events)",
+    "lonestardrift.com",
+    "good-guys.com (car shows)",
+    "tpwd.texas.gov (state parks)",
+    "visitdallas.com",
+    "grapevinetexasusa.com"
+  ]
+}
