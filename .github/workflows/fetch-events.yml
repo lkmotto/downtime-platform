@@ -1,0 +1,84 @@
+name: Daily Event Fetch
+
+on:
+  schedule:
+    # Run daily at 6 AM UTC (midnight CST / 1 AM CDT)
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      cities:
+        description: 'Comma-separated city list (empty = all cities)'
+        required: false
+        default: ''
+      include_google:
+        description: 'Include Google Events via SerpAPI (uses monthly quota)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+jobs:
+  fetch-events:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Run event fetcher
+        env:
+          TM_API_KEY: ${{ secrets.TM_API_KEY }}
+          SG_CLIENT_ID: ${{ secrets.SG_CLIENT_ID }}
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          OTM_API_KEY: ${{ secrets.OTM_API_KEY }}
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+        run: python backend/scripts/fetch_all_cities.py
+
+      - name: Upload fetch log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fetch-log-${{ github.run_number }}
+          path: backend/logs/
+          retention-days: 7
+
+  # Weekly job that includes Google Events (Sundays at 6 AM UTC)
+  weekly-google-fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    if: github.event.schedule == '0 6 * * 0' || (github.event_name == 'workflow_dispatch' && github.event.inputs.include_google == 'true')
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Run event fetcher with Google Events
+        env:
+          TM_API_KEY: ${{ secrets.TM_API_KEY }}
+          SG_CLIENT_ID: ${{ secrets.SG_CLIENT_ID }}
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          OTM_API_KEY: ${{ secrets.OTM_API_KEY }}
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
+          INCLUDE_GOOGLE: 'true'
+        run: python backend/scripts/fetch_all_cities.py
