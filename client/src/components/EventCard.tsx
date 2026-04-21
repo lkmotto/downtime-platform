@@ -4,25 +4,27 @@ import { useStore } from "@/lib/store";
 import { CATEGORY_GRADIENTS, formatEventDate, getScoreColor, getScoreBg } from "@/lib/utils-app";
 import { useState } from "react";
 
-// Unsplash keyword map per category for fallback images
-const CATEGORY_UNSPLASH_KEYWORDS: Record<string, string> = {
-  music: "live+music,concert,band",
-  arts: "art+gallery,exhibition,painting",
-  food: "food,restaurant,dining",
-  outdoor: "outdoor,nature,adventure",
-  nightlife: "nightlife,bar,city+night",
-  sports: "sports,stadium,athlete",
-  film: "cinema,film,movie+theater",
-  festivals: "festival,crowd,celebration",
-  photography: "photography,camera,urban",
-  motorsports: "motorsports,racing,cars",
+// Deterministic seed per category so each category gets a consistent style of image
+// Uses picsum.photos which is free, keyless, and actively maintained
+const CATEGORY_PICSUM_SEED: Record<string, number> = {
+  music: 1060,
+  arts: 1053,
+  food: 431,
+  outdoor: 1018,
+  nightlife: 1044,
+  sports: 1019,
+  film: 1043,
+  festivals: 1055,
+  photography: 1052,
+  motorsports: 1040,
 };
 
-function getUnsplashUrl(category: string, title: string, width = 800, height = 600): string {
-  const keywords = CATEGORY_UNSPLASH_KEYWORDS[category] || "city,event,social";
-  // Use a stable seed based on title so the same event always gets the same image
-  const seed = encodeURIComponent(title.slice(0, 20));
-  return `https://source.unsplash.com/${width}x${height}/?${keywords}&sig=${seed}`;
+function getImageUrl(category: string, eventId: string, width = 800, height = 600): string {
+  // Use category seed + a small offset derived from eventId for variety within category
+  const baseSeed = CATEGORY_PICSUM_SEED[category] ?? 1000;
+  const idOffset = eventId ? parseInt(eventId.replace(/\D/g, "").slice(-3) || "0", 10) % 50 : 0;
+  const seed = baseSeed + idOffset;
+  return `https://picsum.photos/seed/${seed}/${width}/${height}`;
 }
 
 interface EventCardProps {
@@ -38,12 +40,10 @@ export function EventCard({ event, onOpen, variant = "default" }: EventCardProps
   const [imgError, setImgError] = useState(false);
   const gradient = CATEGORY_GRADIENTS[event.category] || "from-slate-900 to-gray-800";
 
-  // Resolve image: prefer event.image_url, fallback to Unsplash, fallback to gradient
-  const imageSrc = !imgError && event.image_url
-    ? event.image_url
-    : !imgError
-    ? getUnsplashUrl(event.category, event.title)
-    : null;
+  // Resolve image: prefer event.image_url, fallback to picsum, fallback to gradient on error
+  const imageSrc = imgError
+    ? null
+    : event.image_url || getImageUrl(event.category, event.id);
 
   const handleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
