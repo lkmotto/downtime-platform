@@ -124,6 +124,26 @@ function generateDemoEvents(city: City): Event[] {
   const scenarios: ("date-night" | "solo" | "weekend-adventure" | "travel")[] = ["date-night", "solo", "weekend-adventure", "travel"];
 
   const templates = [
+
+      // Curated event images for better visual appeal
+  const EVENT_IMAGES: Record<string, string> = {
+    "Live Jazz at The Blue Room": "https://images.pexels.com/photos/1047442/pexels-photo-1047442.jpeg?auto=compress&w=800",
+    "Street Art Walk": "https://images.pexels.com/photos/1647533/pexels-photo-1647533.jpeg?auto=compress&w=800",
+    "Sunset Kayaking": "https://images.pexels.com/photos/6787202/pexels-photo-6787202.jpeg?auto=compress&w=800",
+    "Farmers Market & Food Truck Rally": "https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&w=800",
+    "Rooftop Comedy Night": "https://images.pexels.com/photos/713149/pexels-photo-713149.jpeg?auto=compress&w=800",
+    "Cars & Coffee Monthly Meet": "https://images.pexels.com/photos/3874332/pexels-photo-3874332.jpeg?auto=compress&w=800",
+    "Indie Film Screening": "https://images.pexels.com/photos/7991319/pexels-photo-7991319.jpeg?auto=compress&w=800",
+    "Weekend Hiking — Scenic Overlook Trail": "https://images.pexels.com/photos/1365425/pexels-photo-1365425.jpeg?auto=compress&w=800",
+    "Gallery Opening — New Exhibit": "https://images.pexels.com/photos/1839919/pexels-photo-1839919.jpeg?auto=compress&w=800",
+    "Live Music Festival": "https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg?auto=compress&w=800",
+    "Food Hall Crawl": "https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&w=800",
+    "Drone Pilots Meetup": "https://images.pexels.com/photos/3945683/pexels-photo-3945683.jpeg?auto=compress&w=800",
+    "Vintage Flea Market": "https://images.pexels.com/photos/1580900/pexels-photo-1580900.jpeg?auto=compress&w=800",
+    "Yoga in the Park": "https://images.pexels.com/photos/3822906/pexels-photo-3822906.jpeg?auto=compress&w=800",
+    "Craft Brewery Tour": "https://images.pexels.com/photos/1267363/pexels-photo-1267363.jpeg?auto=compress&w=800"
+  };
+
     { title: `Live Jazz at The Blue Room`, cat: "music", scenario: "date-night", venue: `The Blue Room`, desc: "Intimate jazz trio performing standards and originals. Full bar, dim lighting, perfect for date night. Local musicians at their best.", price: "$15-25", camera: true, cameraN: "Low-light performance shots. Bring a fast prime (f/1.4). Candlelit ambiance, saxophone silhouettes.", tags: ["jazz", "live-music", "intimate", "cocktails"] },
     { title: `${city.name} Street Art Walk`, cat: "arts", scenario: "solo", venue: `Downtown ${city.name}`, desc: "Self-guided walking tour through the city's best murals, installations, and hidden art. Free, always open, endlessly photogenic.", price: "Free", camera: true, cameraN: "Wide-angle for full murals. Golden hour light on textured walls. Details and textures for Instagram grid.", tags: ["street-art", "murals", "walking", "free", "photography"] },
     { title: `Sunset Kayaking`, cat: "outdoor", scenario: "weekend-adventure", venue: `Lakeside Marina`, desc: "Rent kayaks for a sunset paddle. Calm water, wildlife, stunning light. Bring someone or go solo — either way it's magic.", price: "$20-35/hr", camera: true, cameraN: "GoPro for on-water POV. Drone for aerial lake shots at golden hour. Waterproof housing recommended.", tags: ["kayaking", "sunset", "water", "nature", "adventure"] },
@@ -165,12 +185,10 @@ function generateDemoEvents(city: City): Event[] {
       time_info: ["7pm-10pm", "8am-12pm", "6pm-9pm", "10am-5pm", "9pm-1am"][i % 5],
       price_range: t.price,
       price_note: t.price === "Free" ? "No cost" : "Per person",
-      image_url: null,
       camera_worthy: t.camera,
       camera_note: t.cameraN,
       tags: t.tags,
-      score: Math.floor(70 + Math.random() * 30),
-      is_featured: i < 4,
+      image_url: EVENT_IMAGES[t.title] || null,      is_featured: i < 4,
       created_at: now.toISOString(),
     };
   });
