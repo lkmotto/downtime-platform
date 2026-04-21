@@ -1,8 +1,6 @@
 /* Fonts — must come before @tailwind directives */
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&display=swap');
-@import url('https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -56,8 +54,7 @@
   --font-serif: 'Fraunces', Georgia, serif;
   --font-mono: 'JetBrains Mono', Menlo, monospace;
   --radius: .625rem;
-  --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
-  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.04);
+  --font-sans: 'Plus Jakarta Sans', 'Inter', sans-serif;  --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.04);
   --shadow-sm: 0px 2px 4px -1px hsl(0 0% 0% / 0.06);
   --shadow: 0px 4px 8px -2px hsl(0 0% 0% / 0.08);
   --shadow-md: 0px 6px 16px -4px hsl(0 0% 0% / 0.10);
