@@ -6,6 +6,7 @@ Auth: API key as query param (apikey=)
 Rate limit: 5,000 calls/day, 5 req/sec
 Docs: https://developer.ticketmaster.com/products-and-docs/apis/discovery-api/v2/
 """
+
 import hashlib
 import logging
 from datetime import datetime, timedelta
@@ -311,7 +312,9 @@ async def fetch_ticketmaster_events(  # noqa: C901
                     break
 
     except httpx.HTTPStatusError as e:
-        logger.error(f"Ticketmaster HTTP error for {city}, {state}: {e.response.status_code}")
+        logger.error(
+            f"Ticketmaster HTTP error for {city}, {state}: {e.response.status_code}"
+        )
     except httpx.RequestError as e:
         logger.error(f"Ticketmaster request error for {city}, {state}: {e}")
     except Exception as e:

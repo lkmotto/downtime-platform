@@ -6,6 +6,7 @@ Auth: API key as query param (apikey=)
 Rate limit: 5,000/day, cacheable
 Docs: https://dev.opentripmap.org
 """
+
 import hashlib
 import logging
 
@@ -45,9 +46,17 @@ OTM_CATEGORY_MAP = {
 
 # Kind → camera-worthiness mapping
 CAMERA_WORTHY_KINDS = {
-    "natural", "beaches", "gardens_and_parks", "view_points",
-    "geological_formations", "mountain_peaks", "water",
-    "architecture", "historic", "cultural", "museums",
+    "natural",
+    "beaches",
+    "gardens_and_parks",
+    "view_points",
+    "geological_formations",
+    "mountain_peaks",
+    "water",
+    "architecture",
+    "historic",
+    "cultural",
+    "museums",
 }
 
 CAMERA_NOTES = {
@@ -116,7 +125,9 @@ def _is_camera_worthy(kinds_str: str) -> tuple[bool, str | None]:
     kinds = [k.strip() for k in kinds_str.split(",")]
     for kind in kinds:
         if kind in CAMERA_WORTHY_KINDS:
-            note = CAMERA_NOTES.get(kind, "A visually interesting spot worth photographing")
+            note = CAMERA_NOTES.get(
+                kind, "A visually interesting spot worth photographing"
+            )
             return True, note
 
     return False, None
@@ -144,7 +155,9 @@ def _rate_to_score_boost(rate: int) -> int:
     return min(rate * 5, 35)  # Max 35 point boost
 
 
-def _normalize_place(raw: dict, city: str, state: str, detail: dict | None = None) -> Event:
+def _normalize_place(
+    raw: dict, city: str, state: str, detail: dict | None = None
+) -> Event:
     """Convert a raw OpenTripMap place to our Event model."""
     name = raw.get("name", "") or ""
     if detail:
@@ -174,8 +187,9 @@ def _normalize_place(raw: dict, city: str, state: str, detail: dict | None = Non
             addr.get("road", ""),
             addr.get("house_number", ""),
         ]
-        city_name = addr.get("city", "") or addr.get("town", "") or addr.get("village", "")
-        state_name = addr.get("state", "")
+        city_name = (
+            addr.get("city", "") or addr.get("town", "") or addr.get("village", "")
+        )
         address_str = ", ".join(p for p in parts if p)
         if city_name and city_name.lower() != city.lower():
             address_str += f", {city_name}"
@@ -273,7 +287,9 @@ async def fetch_opentripmap_places(
 
             places = resp.json()
             if not isinstance(places, list):
-                logger.warning(f"OpenTripMap returned unexpected format: {type(places)}")
+                logger.warning(
+                    f"OpenTripMap returned unexpected format: {type(places)}"
+                )
                 return []
 
             # Filter out places without names
@@ -293,7 +309,9 @@ async def fetch_opentripmap_places(
                         if detail_resp.status_code == 200:
                             detail = detail_resp.json()
                     except Exception as e:
-                        logger.debug(f"Failed to fetch OTM detail for {place.get('xid')}: {e}")
+                        logger.debug(
+                            f"Failed to fetch OTM detail for {place.get('xid')}: {e}"
+                        )
 
                 try:
                     events.append(_normalize_place(place, city, state, detail))

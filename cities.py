@@ -1,6 +1,7 @@
 """
 Top 50 US cities with coordinates for event fetching.
 """
+
 from models import City
 
 CITIES: list[City] = [

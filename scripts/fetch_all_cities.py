@@ -11,7 +11,10 @@ Environment variables:
     INCLUDE_GOOGLE  — Set to 'true' to include Google Events (weekly only)
     TM_API_KEY, SG_CLIENT_ID, SERPAPI_KEY, OTM_API_KEY — API keys
 """
-import sys as _sys, pathlib as _pathlib  # noqa: E402
+
+import sys as _sys
+import pathlib as _pathlib  # noqa: E402
+
 _sys.path.insert(0, str(_pathlib.Path(__file__).resolve().parent.parent))
 import sentry_init  # noqa: E402,F401
 
@@ -45,7 +48,9 @@ INCLUDE_GOOGLE = os.getenv("INCLUDE_GOOGLE", "false").lower() == "true"
 DELAY_BETWEEN_CITIES = 2  # seconds
 
 
-async def refresh_city_via_api(client: httpx.AsyncClient, city: str, state: str, include_google: bool = False) -> dict:
+async def refresh_city_via_api(
+    client: httpx.AsyncClient, city: str, state: str, include_google: bool = False
+) -> dict:
     """Call the backend's refresh endpoint for a single city."""
     params = {
         "city": city,
@@ -78,7 +83,9 @@ async def refresh_city_via_api(client: httpx.AsyncClient, city: str, state: str,
         }
 
 
-async def refresh_city_direct(city: str, state: str, lat: float, lon: float, include_google: bool = False) -> dict:
+async def refresh_city_direct(
+    city: str, state: str, lat: float, lon: float, include_google: bool = False
+) -> dict:
     """Fetch events directly using Python modules (no running backend needed)."""
     from fetchers.ticketmaster import fetch_ticketmaster_events
     from fetchers.seatgeek import fetch_seatgeek_events
@@ -91,7 +98,9 @@ async def refresh_city_direct(city: str, state: str, lat: float, lon: float, inc
 
     # Ticketmaster
     try:
-        tm_events = await fetch_ticketmaster_events(city=city, state=state, lat=lat, lon=lon)
+        tm_events = await fetch_ticketmaster_events(
+            city=city, state=state, lat=lat, lon=lon
+        )
         all_events.extend(tm_events)
         sources_status["ticketmaster"] = len(tm_events)
     except Exception as e:
@@ -99,7 +108,9 @@ async def refresh_city_direct(city: str, state: str, lat: float, lon: float, inc
 
     # SeatGeek
     try:
-        sg_events = await fetch_seatgeek_events(city=city, state=state, lat=lat, lon=lon)
+        sg_events = await fetch_seatgeek_events(
+            city=city, state=state, lat=lat, lon=lon
+        )
         all_events.extend(sg_events)
         sources_status["seatgeek"] = len(sg_events)
     except Exception as e:
@@ -107,7 +118,9 @@ async def refresh_city_direct(city: str, state: str, lat: float, lon: float, inc
 
     # OpenTripMap
     try:
-        otm_events = await fetch_opentripmap_places(city=city, state=state, lat=lat, lon=lon, fetch_details=False)
+        otm_events = await fetch_opentripmap_places(
+            city=city, state=state, lat=lat, lon=lon, fetch_details=False
+        )
         all_events.extend(otm_events)
         sources_status["opentripmap"] = len(otm_events)
     except Exception as e:
@@ -159,17 +172,25 @@ async def main():
         async with httpx.AsyncClient(timeout=120) as client:
             for city in CITIES:
                 logger.info(f"Refreshing {city.name}, {city.state}...")
-                result = await refresh_city_via_api(client, city.name, city.state, INCLUDE_GOOGLE)
+                result = await refresh_city_via_api(
+                    client, city.name, city.state, INCLUDE_GOOGLE
+                )
                 results.append(result)
-                logger.info(f"  → {result['status']}: {result.get('total_events', 0)} events")
+                logger.info(
+                    f"  → {result['status']}: {result.get('total_events', 0)} events"
+                )
                 await asyncio.sleep(DELAY_BETWEEN_CITIES)
     else:
         logger.info("Backend not reachable — running fetch directly")
         for city in CITIES:
             logger.info(f"Fetching {city.name}, {city.state}...")
-            result = await refresh_city_direct(city.name, city.state, city.lat, city.lon, INCLUDE_GOOGLE)
+            result = await refresh_city_direct(
+                city.name, city.state, city.lat, city.lon, INCLUDE_GOOGLE
+            )
             results.append(result)
-            logger.info(f"  → {result['status']}: {result.get('total_events', 0)} events")
+            logger.info(
+                f"  → {result['status']}: {result.get('total_events', 0)} events"
+            )
             await asyncio.sleep(DELAY_BETWEEN_CITIES)
 
     elapsed = time.time() - start_time
@@ -210,9 +231,9 @@ async def main():
 
 if __name__ == "__main__":
     import sentry_sdk as _sentry_sdk
+
     try:
         asyncio.run(main())
     except Exception as _exc:
         _sentry_sdk.capture_exception(_exc)
         raise
-

@@ -8,6 +8,7 @@ API Routes:
     POST /api/events/refresh   — Trigger a fresh fetch for a city
     GET  /api/health           — Health check
 """
+
 import sentry_init  # noqa: E402,F401
 
 import asyncio
@@ -41,6 +42,7 @@ logger = logging.getLogger("downtime")
 # ──────────────────────────────────────────────
 # Lifespan (startup/shutdown)
 # ──────────────────────────────────────────────
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -78,12 +80,17 @@ app.add_middleware(
 # Internal helpers
 # ──────────────────────────────────────────────
 
-async def _fetch_all_events(city: str, state: str, lat: float, lon: float, include_google: bool = False) -> list[Event]:
+
+async def _fetch_all_events(
+    city: str, state: str, lat: float, lon: float, include_google: bool = False
+) -> list[Event]:
     """Fetch events from all sources concurrently."""
     tasks = [
         fetch_ticketmaster_events(city=city, state=state, lat=lat, lon=lon),
         fetch_seatgeek_events(city=city, state=state, lat=lat, lon=lon),
-        fetch_opentripmap_places(city=city, state=state, lat=lat, lon=lon, fetch_details=True),
+        fetch_opentripmap_places(
+            city=city, state=state, lat=lat, lon=lon, fetch_details=True
+        ),
     ]
 
     if include_google:
@@ -122,9 +129,16 @@ def _deduplicate_events(events: list[Event]) -> list[Event]:
             seen[dedup_key] = event
         else:
             # Keep the one with more data (prefer ticketmaster > seatgeek > google > opentripmap)
-            source_priority = {"ticketmaster": 4, "seatgeek": 3, "google": 2, "opentripmap": 1}
+            source_priority = {
+                "ticketmaster": 4,
+                "seatgeek": 3,
+                "google": 2,
+                "opentripmap": 1,
+            }
             existing = seen[dedup_key]
-            if source_priority.get(event.source, 0) > source_priority.get(existing.source, 0):
+            if source_priority.get(event.source, 0) > source_priority.get(
+                existing.source, 0
+            ):
                 seen[dedup_key] = event
 
     return list(seen.values())
@@ -134,12 +148,17 @@ def _deduplicate_events(events: list[Event]) -> list[Event]:
 # Routes
 # ──────────────────────────────────────────────
 
+
 @app.get("/api/events", response_model=EventsResponse)
 async def get_events(
     city: str = Query(..., description="City name (e.g., 'Austin')"),
     state: str = Query(..., description="State code (e.g., 'TX')"),
-    lat: float | None = Query(None, description="Latitude (optional, auto-resolved from city)"),
-    lon: float | None = Query(None, description="Longitude (optional, auto-resolved from city)"),
+    lat: float | None = Query(
+        None, description="Latitude (optional, auto-resolved from city)"
+    ),
+    lon: float | None = Query(
+        None, description="Longitude (optional, auto-resolved from city)"
+    ),
     category: str | None = Query(None, description="Filter by category"),
     limit: int = Query(50, ge=1, le=200, description="Max events to return"),
 ):
@@ -207,7 +226,9 @@ async def get_events(
 async def get_events_by_scenario(
     city: str = Query(..., description="City name"),
     state: str = Query(..., description="State code"),
-    scenario: str = Query(..., description="Scenario: date-night, solo, weekend-adventure, travel"),
+    scenario: str = Query(
+        ..., description="Scenario: date-night, solo, weekend-adventure, travel"
+    ),
     limit: int = Query(20, ge=1, le=100),
 ):
     """
@@ -230,7 +251,9 @@ async def get_events_by_scenario(
     cached = event_cache.get(city, state)
     if cached is None:
         if not city_obj:
-            raise HTTPException(status_code=400, detail=f"City '{city}, {state}' not found.")
+            raise HTTPException(
+                status_code=400, detail=f"City '{city}, {state}' not found."
+            )
         # Fetch and cache
         raw_events = await _fetch_all_events(city, state, lat, lon)
         deduped = _deduplicate_events(raw_events)
@@ -260,7 +283,9 @@ async def list_cities():
 async def refresh_events(
     city: str = Query(..., description="City name"),
     state: str = Query(..., description="State code"),
-    include_google: bool = Query(False, description="Include SerpAPI Google Events (costs 1 of 250/month)"),
+    include_google: bool = Query(
+        False, description="Include SerpAPI Google Events (costs 1 of 250/month)"
+    ),
 ):
     """
     Force a fresh fetch for a city, bypassing cache.
@@ -270,14 +295,20 @@ async def refresh_events(
     """
     city_obj = get_city(city, state)
     if not city_obj:
-        raise HTTPException(status_code=400, detail=f"City '{city}, {state}' not found in supported cities.")
+        raise HTTPException(
+            status_code=400,
+            detail=f"City '{city}, {state}' not found in supported cities.",
+        )
 
     # Invalidate existing cache
     event_cache.invalidate_city(city, state)
 
     # Fetch fresh from all sources
     raw_events = await _fetch_all_events(
-        city, state, city_obj.lat, city_obj.lon,
+        city,
+        state,
+        city_obj.lat,
+        city_obj.lon,
         include_google=include_google,
     )
 
@@ -314,10 +345,11 @@ async def health_check():
 
 if __name__ == "__main__":
     import sentry_sdk as _sentry_sdk
+
     try:
         import uvicorn
+
         uvicorn.run("main:app", host=HOST, port=PORT, reload=(ENV != "production"))
     except Exception as _exc:
         _sentry_sdk.capture_exception(_exc)
         raise
-

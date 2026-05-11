@@ -35,7 +35,7 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -r backend/requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Run event fetcher
         env:
@@ -44,14 +44,14 @@ jobs:
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
           OTM_API_KEY: ${{ secrets.OTM_API_KEY }}
           BACKEND_URL: ${{ secrets.BACKEND_URL }}
-        run: python backend/scripts/fetch_all_cities.py
+        run: python scripts/fetch_all_cities.py
 
       - name: Upload fetch log
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: fetch-log-${{ github.run_number }}
-          path: backend/logs/
+          path: logs/
           retention-days: 7
 
   # Weekly job that includes Google Events (Sundays at 6 AM UTC)
@@ -71,7 +71,7 @@ jobs:
           cache: 'pip'
 
       - name: Install dependencies
-        run: pip install -r backend/requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Run event fetcher with Google Events
         env:
@@ -81,4 +81,4 @@ jobs:
           OTM_API_KEY: ${{ secrets.OTM_API_KEY }}
           BACKEND_URL: ${{ secrets.BACKEND_URL }}
           INCLUDE_GOOGLE: 'true'
-        run: python backend/scripts/fetch_all_cities.py
+        run: python scripts/fetch_all_cities.py

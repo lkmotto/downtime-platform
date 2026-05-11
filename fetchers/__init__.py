@@ -2,6 +2,7 @@
 Event fetcher modules for DownTime.
 Each fetcher handles one external API source.
 """
+
 from fetchers.ticketmaster import fetch_ticketmaster_events
 from fetchers.seatgeek import fetch_seatgeek_events
 from fetchers.serpapi_google import fetch_google_events

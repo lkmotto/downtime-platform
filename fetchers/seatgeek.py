@@ -6,6 +6,7 @@ Auth: client_id query param
 Rate limit: No published cap (reasonable use)
 Docs: https://platform.seatgeek.com
 """
+
 import hashlib
 import logging
 from datetime import datetime, timedelta
@@ -298,7 +299,9 @@ async def fetch_seatgeek_events(
                     continue
 
     except httpx.HTTPStatusError as e:
-        logger.error(f"SeatGeek HTTP error for {city}, {state}: {e.response.status_code}")
+        logger.error(
+            f"SeatGeek HTTP error for {city}, {state}: {e.response.status_code}"
+        )
     except httpx.RequestError as e:
         logger.error(f"SeatGeek request error for {city}, {state}: {e}")
     except Exception as e:

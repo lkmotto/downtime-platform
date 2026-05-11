@@ -2,6 +2,7 @@
 Simple in-memory cache with TTL for event data.
 Keeps memory usage low for Railway free tier (512MB).
 """
+
 import time
 import logging
 from typing import Any
@@ -39,7 +40,14 @@ class EventCache:
         logger.debug(f"Cache hit for {key} ({len(entry['data'])} events)")
         return entry["data"]
 
-    def set(self, city: str, state: str, events: list, suffix: str = "", ttl: int | None = None):
+    def set(
+        self,
+        city: str,
+        state: str,
+        events: list,
+        suffix: str = "",
+        ttl: int | None = None,
+    ):
         """Cache events for a city with TTL."""
         key = self._make_key(city, state, suffix)
         self._store[key] = {

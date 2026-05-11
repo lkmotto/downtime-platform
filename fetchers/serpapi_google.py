@@ -6,6 +6,7 @@ Auth: API key as query param (api_key=)
 Rate limit: 250 searches/month on free tier — use weekly only
 Docs: https://serpapi.com/google-events-api
 """
+
 import hashlib
 import logging
 import re
@@ -39,16 +40,113 @@ def _guess_category(title: str, description: str = "") -> str:
     text = f"{title} {description}".lower()
 
     category_keywords = {
-        "music": ["concert", "live music", "band", "dj", "orchestra", "symphony", "jazz", "hip hop", "rock", "festival music", "songwriter", "open mic"],
-        "sports": ["game", "match", "tournament", "race", "marathon", "5k", "10k", "baseball", "basketball", "football", "soccer", "hockey", "tennis", "boxing", "wrestling"],
-        "arts": ["art", "gallery", "exhibit", "museum", "theater", "theatre", "play", "musical", "ballet", "dance", "opera", "comedy", "stand-up", "standup", "improv"],
-        "food": ["food", "wine", "beer", "tasting", "brunch", "dinner", "cooking", "chef", "culinary", "brewery", "distillery", "farmers market"],
-        "outdoor": ["hike", "hiking", "trail", "park", "garden", "outdoor", "nature", "kayak", "bike", "cycling", "camping", "fishing"],
-        "nightlife": ["club", "nightclub", "party", "dj set", "rave", "bar crawl", "happy hour", "lounge", "karaoke"],
+        "music": [
+            "concert",
+            "live music",
+            "band",
+            "dj",
+            "orchestra",
+            "symphony",
+            "jazz",
+            "hip hop",
+            "rock",
+            "festival music",
+            "songwriter",
+            "open mic",
+        ],
+        "sports": [
+            "game",
+            "match",
+            "tournament",
+            "race",
+            "marathon",
+            "5k",
+            "10k",
+            "baseball",
+            "basketball",
+            "football",
+            "soccer",
+            "hockey",
+            "tennis",
+            "boxing",
+            "wrestling",
+        ],
+        "arts": [
+            "art",
+            "gallery",
+            "exhibit",
+            "museum",
+            "theater",
+            "theatre",
+            "play",
+            "musical",
+            "ballet",
+            "dance",
+            "opera",
+            "comedy",
+            "stand-up",
+            "standup",
+            "improv",
+        ],
+        "food": [
+            "food",
+            "wine",
+            "beer",
+            "tasting",
+            "brunch",
+            "dinner",
+            "cooking",
+            "chef",
+            "culinary",
+            "brewery",
+            "distillery",
+            "farmers market",
+        ],
+        "outdoor": [
+            "hike",
+            "hiking",
+            "trail",
+            "park",
+            "garden",
+            "outdoor",
+            "nature",
+            "kayak",
+            "bike",
+            "cycling",
+            "camping",
+            "fishing",
+        ],
+        "nightlife": [
+            "club",
+            "nightclub",
+            "party",
+            "dj set",
+            "rave",
+            "bar crawl",
+            "happy hour",
+            "lounge",
+            "karaoke",
+        ],
         "film": ["film", "movie", "cinema", "screening", "documentary", "short film"],
-        "festivals": ["festival", "fest ", "fair", "carnival", "celebration", "fiesta", "block party", "street festival"],
+        "festivals": [
+            "festival",
+            "fest ",
+            "fair",
+            "carnival",
+            "celebration",
+            "fiesta",
+            "block party",
+            "street festival",
+        ],
         "photography": ["photo", "photography", "camera", "photo walk"],
-        "motorsports": ["racing", "drag race", "nascar", "formula", "motocross", "monster truck"],
+        "motorsports": [
+            "racing",
+            "drag race",
+            "nascar",
+            "formula",
+            "motocross",
+            "monster truck",
+        ],
     }
 
     for category, keywords in category_keywords.items():
@@ -65,8 +163,19 @@ def _extract_tags(event: dict) -> list[str]:
     title = (event.get("title") or "").lower()
 
     tag_keywords = [
-        "free", "outdoor", "live", "family", "kids", "virtual", "online",
-        "workshop", "class", "tour", "meetup", "popup", "pop-up",
+        "free",
+        "outdoor",
+        "live",
+        "family",
+        "kids",
+        "virtual",
+        "online",
+        "workshop",
+        "class",
+        "tour",
+        "meetup",
+        "popup",
+        "pop-up",
     ]
     for kw in tag_keywords:
         if kw in title:
@@ -76,7 +185,17 @@ def _extract_tags(event: dict) -> list[str]:
     address_parts = event.get("address", [])
     if address_parts and len(address_parts) > 0:
         venue_name = address_parts[0].lower()
-        venue_hints = ["park", "museum", "gallery", "theater", "stadium", "arena", "bar", "brewery", "garden"]
+        venue_hints = [
+            "park",
+            "museum",
+            "gallery",
+            "theater",
+            "stadium",
+            "arena",
+            "bar",
+            "brewery",
+            "garden",
+        ]
         for hint in venue_hints:
             if hint in venue_name:
                 tags.append(hint)
@@ -93,8 +212,6 @@ def _parse_price(ticket_info: list) -> tuple[str, str]:
     sources = []
     for ticket in ticket_info:
         source = ticket.get("source", "")
-        link = ticket.get("link", "")
-        price_str = ticket.get("link_type", "") or ""
 
         # Try to extract price from the ticket data
         if source:
@@ -115,7 +232,10 @@ def _parse_price(ticket_info: list) -> tuple[str, str]:
         min_p, max_p = min(prices), max(prices)
         if min_p == max_p:
             return (f"${min_p:.0f}", f"Tickets at ${min_p:.0f}")
-        return (f"${min_p:.0f}–${max_p:.0f}", f"Tickets from ${min_p:.0f} to ${max_p:.0f}")
+        return (
+            f"${min_p:.0f}–${max_p:.0f}",
+            f"Tickets from ${min_p:.0f} to ${max_p:.0f}",
+        )
 
     if sources:
         return ("See link", f"Tickets via {', '.join(sources)}")
@@ -130,7 +250,6 @@ def _normalize_event(raw: dict, city: str, state: str) -> Event:
     # Address parsing — Google returns an array like ["Venue Name", "City, TX"]
     address_parts = raw.get("address", [])
     venue_name = address_parts[0] if len(address_parts) > 0 else ""
-    address_str = address_parts[1] if len(address_parts) > 1 else ""
     full_address = ", ".join(address_parts[1:]) if len(address_parts) > 1 else ""
 
     # Date parsing
