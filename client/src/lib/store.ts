@@ -123,9 +123,7 @@ function generateDemoEvents(city: City): Event[] {
   const categories = ["music", "arts", "food", "outdoor", "nightlife", "sports", "film", "festivals", "photography", "motorsports"];
   const scenarios: ("date-night" | "solo" | "weekend-adventure" | "travel")[] = ["date-night", "solo", "weekend-adventure", "travel"];
 
-  const templates = [
-
-      // Curated event images for better visual appeal
+  // Curated event images for better visual appeal
   const EVENT_IMAGES: Record<string, string> = {
     "Live Jazz at The Blue Room": "https://images.pexels.com/photos/1047442/pexels-photo-1047442.jpeg?auto=compress&w=800",
     "Street Art Walk": "https://images.pexels.com/photos/1647533/pexels-photo-1647533.jpeg?auto=compress&w=800",
@@ -144,6 +142,7 @@ function generateDemoEvents(city: City): Event[] {
     "Craft Brewery Tour": "https://images.pexels.com/photos/1267363/pexels-photo-1267363.jpeg?auto=compress&w=800"
   };
 
+  const templates = [
     { title: `Live Jazz at The Blue Room`, cat: "music", scenario: "date-night", venue: `The Blue Room`, desc: "Intimate jazz trio performing standards and originals. Full bar, dim lighting, perfect for date night. Local musicians at their best.", price: "$15-25", camera: true, cameraN: "Low-light performance shots. Bring a fast prime (f/1.4). Candlelit ambiance, saxophone silhouettes.", tags: ["jazz", "live-music", "intimate", "cocktails"] },
     { title: `${city.name} Street Art Walk`, cat: "arts", scenario: "solo", venue: `Downtown ${city.name}`, desc: "Self-guided walking tour through the city's best murals, installations, and hidden art. Free, always open, endlessly photogenic.", price: "Free", camera: true, cameraN: "Wide-angle for full murals. Golden hour light on textured walls. Details and textures for Instagram grid.", tags: ["street-art", "murals", "walking", "free", "photography"] },
     { title: `Sunset Kayaking`, cat: "outdoor", scenario: "weekend-adventure", venue: `Lakeside Marina`, desc: "Rent kayaks for a sunset paddle. Calm water, wildlife, stunning light. Bring someone or go solo — either way it's magic.", price: "$20-35/hr", camera: true, cameraN: "GoPro for on-water POV. Drone for aerial lake shots at golden hour. Waterproof housing recommended.", tags: ["kayaking", "sunset", "water", "nature", "adventure"] },
@@ -187,8 +186,10 @@ function generateDemoEvents(city: City): Event[] {
       price_note: t.price === "Free" ? "No cost" : "Per person",
       camera_worthy: t.camera,
       camera_note: t.cameraN,
+      score: Math.floor(Math.random() * 30) + 70,
+      is_featured: i < 4,
       tags: t.tags,
-      image_url: EVENT_IMAGES[t.title] || null,      is_featured: i < 4,
+      image_url: EVENT_IMAGES[t.title] || null,
       created_at: now.toISOString(),
     };
   });

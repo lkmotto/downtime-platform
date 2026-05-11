@@ -10,7 +10,7 @@ export const db = drizzle(sqlite);
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
 }
 
@@ -19,8 +19,8 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(users).where(eq(users.id, id)).get();
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return db.select().from(users).where(eq(users.username, username)).get();
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return db.select().from(users).where(eq(users.email, email)).get();
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
