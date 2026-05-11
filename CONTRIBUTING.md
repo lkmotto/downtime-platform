@@ -38,6 +38,23 @@ Breaking changes are signaled by appending `!` after the type/scope
 (e.g. `feat!: drop Python 3.8 support`) or by including a
 `BREAKING CHANGE:` footer; both trigger a major release.
 
+## Pre-commit Hooks
+
+This repository uses [pre-commit](https://pre-commit.com/) to run linting and
+security checks automatically before each commit. To enable:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+After installation, hooks will run automatically on `git commit`. You can also
+run them manually against all files with:
+
+```bash
+pre-commit run --all-files
+```
+
 ### How releases work
 
 A GitHub Action (`.github/workflows/release-please.yml`) watches the default
