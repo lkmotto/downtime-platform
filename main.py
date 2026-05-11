@@ -8,6 +8,8 @@ API Routes:
     POST /api/events/refresh   — Trigger a fresh fetch for a city
     GET  /api/health           — Health check
 """
+import sentry_init  # noqa: E402,F401
+
 import asyncio
 import logging
 from contextlib import asynccontextmanager
@@ -311,5 +313,11 @@ async def health_check():
 # ──────────────────────────────────────────────
 
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host=HOST, port=PORT, reload=(ENV != "production"))
+    import sentry_sdk as _sentry_sdk
+    try:
+        import uvicorn
+        uvicorn.run("main:app", host=HOST, port=PORT, reload=(ENV != "production"))
+    except Exception as _exc:
+        _sentry_sdk.capture_exception(_exc)
+        raise
+

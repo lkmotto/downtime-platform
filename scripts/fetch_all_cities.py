@@ -11,6 +11,10 @@ Environment variables:
     INCLUDE_GOOGLE  — Set to 'true' to include Google Events (weekly only)
     TM_API_KEY, SG_CLIENT_ID, SERPAPI_KEY, OTM_API_KEY — API keys
 """
+import sys as _sys, pathlib as _pathlib  # noqa: E402
+_sys.path.insert(0, str(_pathlib.Path(__file__).resolve().parent.parent))
+import sentry_init  # noqa: E402,F401
+
 import asyncio
 import json
 import logging
@@ -205,4 +209,10 @@ async def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    import sentry_sdk as _sentry_sdk
+    try:
+        asyncio.run(main())
+    except Exception as _exc:
+        _sentry_sdk.capture_exception(_exc)
+        raise
+
