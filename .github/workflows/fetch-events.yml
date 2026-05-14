@@ -1,23 +1,6 @@
 name: Daily Event Fetch
 
-on:
-  schedule:
-    # Run daily at 6 AM UTC (midnight CST / 1 AM CDT)
-    - cron: '0 6 * * *'
-  workflow_dispatch:
-    inputs:
-      cities:
-        description: 'Comma-separated city list (empty = all cities)'
-        required: false
-        default: ''
-      include_google:
-        description: 'Include Google Events via SerpAPI (uses monthly quota)'
-        required: false
-        default: 'false'
-        type: choice
-        options:
-          - 'false'
-          - 'true'
+on: workflow_dispatch:
 
 jobs:
   fetch-events:
