@@ -10,7 +10,8 @@ API Routes:
     POST /internal/events      — Ingest events from external agents
 """
 
-import sentry_init  # noqa: E402,F401
+from motto_common.sentry_init import init_sentry  # was: import sentry_init
+init_sentry(agent_name="downtime-backend")
 
 import asyncio
 import logging
@@ -20,10 +21,10 @@ from datetime import datetime
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from config import CORS_ORIGINS, HOST, PORT, ENV, BACKEND_API_KEY
+from config import CORS_ORIGINS, HOST, PORT, ENV
 from models import (
     Event, EventsResponse, CityResponse, HealthResponse,
-    InternalEventPayload, InternalEventsRequest, InternalEventsResponse,
+    InternalEventsRequest, InternalEventsResponse,
 )
 from cities import get_city, get_all_cities, CITIES
 from cache import event_cache
