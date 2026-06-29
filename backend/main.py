@@ -7,6 +7,7 @@ API Routes:
     GET  /api/cities           — List of supported cities
     POST /api/events/refresh   — Trigger a fresh fetch for a city
     GET  /api/health           — Health check
+    POST /internal/events      — Ingest events from external agents
 """
 
 import sentry_init  # noqa: E402,F401
@@ -14,12 +15,16 @@ import sentry_init  # noqa: E402,F401
 import asyncio
 import logging
 from contextlib import asynccontextmanager
+from datetime import datetime
 
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from config import CORS_ORIGINS, HOST, PORT, ENV
-from models import Event, EventsResponse, CityResponse, HealthResponse
+from config import CORS_ORIGINS, HOST, PORT, ENV, BACKEND_API_KEY
+from models import (
+    Event, EventsResponse, CityResponse, HealthResponse,
+    InternalEventPayload, InternalEventsRequest, InternalEventsResponse,
+)
 from cities import get_city, get_all_cities, CITIES
 from cache import event_cache
 from scoring import score_events
@@ -336,6 +341,80 @@ async def health_check():
         version="0.1.0",
         cache_size=event_cache.size,
         supported_cities=len(CITIES),
+    )
+
+
+@app.post("/internal/events", response_model=InternalEventsResponse)
+async def ingest_internal_events(body: InternalEventsRequest):
+    """
+    Ingest events from external agents (e.g., downtime-event-agent).
+
+    Accepts a batch of events, converts them to the canonical Event model,
+    scores them, and updates the cache for the specified city.
+    """
+    # Convert incoming payloads to Event models
+    scored_count = 0
+    converted_events: list[Event] = []
+    for ev in body.events:
+        try:
+            event = Event(
+                id=ev.id,
+                title=ev.title,
+                description=ev.description,
+                category=ev.category,
+                scenario=ev.scenario,
+                source=ev.source,
+                source_url=ev.source_url,
+                venue=ev.venue,
+                address=ev.address,
+                city=ev.city or body.city,
+                state=ev.state or body.state,
+                lat=ev.lat,
+                lon=ev.lon,
+                date_start=ev.date_start,
+                date_end=ev.date_end,
+                time_info=ev.time_info,
+                price_range=ev.price_range,
+                price_note=ev.price_note,
+                image_url=ev.image_url,
+                camera_worthy=ev.camera_worthy,
+                camera_note=ev.camera_note,
+                tags=ev.tags,
+                score=ev.score,
+                is_featured=ev.is_featured,
+                created_at=datetime.fromisoformat(ev.created_at) if ev.created_at else datetime.utcnow(),
+            )
+            converted_events.append(event)
+        except Exception as e:
+            logger.warning(f"Failed to convert event {ev.id}: {e}")
+            continue
+
+    # Score the events for this city
+    city_obj = get_city(body.city, body.state)
+    city_lat = city_obj.lat if city_obj else 0.0
+    city_lon = city_obj.lon if city_obj else 0.0
+
+    scored = score_events(converted_events, city_lat=city_lat, city_lon=city_lon)
+    scored_count = len(scored)
+
+    # Merge with existing cache
+    existing = event_cache.get(body.city, body.state) or []
+    merged = _deduplicate_events(existing + scored)
+
+    # Cache the merged result
+    event_cache.set(body.city, body.state, merged)
+
+    logger.info(
+        f"Internal: ingested {len(body.events)} events for {body.city}, {body.state} "
+        f"({scored_count} scored, {len(merged)} total in cache)"
+    )
+
+    return InternalEventsResponse(
+        accepted=True,
+        events_received=len(body.events),
+        events_scored=scored_count,
+        city=body.city,
+        state=body.state,
     )
 
 

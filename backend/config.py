@@ -28,6 +28,9 @@ CORS_ORIGINS = os.getenv(
 # Cache TTL in seconds (6 hours)
 CACHE_TTL = int(os.getenv("CACHE_TTL", str(6 * 60 * 60)))
 
+# Backend API key for internal agent communication
+BACKEND_API_KEY = os.getenv("BACKEND_API_KEY", "")
+
 # Fetch settings
 FETCH_DAYS_AHEAD = int(os.getenv("FETCH_DAYS_AHEAD", "14"))
 FETCH_PAGE_SIZE = int(os.getenv("FETCH_PAGE_SIZE", "100"))

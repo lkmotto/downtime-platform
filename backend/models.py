@@ -68,3 +68,50 @@ class HealthResponse(BaseModel):
     version: str
     cache_size: int
     supported_cities: int
+
+
+class InternalEventPayload(BaseModel):
+    """Individual event in the /internal/events batch."""
+    id: str
+    title: str
+    description: str = ""
+    category: str = ""
+    scenario: str = ""
+    source: str = "agent"
+    source_url: str = ""
+    venue: str = ""
+    address: str = ""
+    city: str = ""
+    state: str = ""
+    lat: float = 0.0
+    lon: float = 0.0
+    date_start: Optional[str] = None
+    date_end: Optional[str] = None
+    time_info: str = ""
+    price_range: str = ""
+    price_note: str = ""
+    image_url: Optional[str] = None
+    camera_worthy: bool = False
+    camera_note: Optional[str] = None
+    tags: list[str] = Field(default_factory=list)
+    score: int = 0
+    is_featured: bool = False
+    created_at: Optional[str] = None
+
+
+class InternalEventsRequest(BaseModel):
+    """Request body for POST /internal/events."""
+    city: str
+    state: str
+    source: str = "agent"
+    event_count: int = 0
+    events: list[InternalEventPayload] = Field(default_factory=list)
+
+
+class InternalEventsResponse(BaseModel):
+    """Response for POST /internal/events."""
+    accepted: bool
+    events_received: int
+    events_scored: int
+    city: str
+    state: str
