@@ -14,7 +14,7 @@ export async function registerRoutes(server: Server, app: Express) {
     if (saved === "true") filters.onlySaved = true;
     if (isNew === "true") filters.onlyNew = true;
     if (camera === "true") filters.onlyCameraWorthy = true;
-    
+
     const events = storage.getEvents(filters);
     res.json(events);
   });
@@ -96,7 +96,7 @@ export async function registerRoutes(server: Server, app: Express) {
     const now = new Date().toISOString();
     const seedEvents = getSeedEvents(now);
     const created = storage.createEvents(seedEvents);
-    
+
     // Log agent run
     storage.logAgentRun({
       ranAt: now,

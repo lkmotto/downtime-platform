@@ -113,8 +113,8 @@ export default function ProfilePage() {
               <span className="font-display text-base font-semibold text-foreground">DownTime</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Your AI concierge for the best ways to spend your free time. We find compelling events, 
-              experiences, and hidden gems — then score them based on your taste. Think Spotify's Discover 
+              Your AI concierge for the best ways to spend your free time. We find compelling events,
+              experiences, and hidden gems — then score them based on your taste. Think Spotify's Discover
               Weekly, but for everything you do outside of work.
             </p>
           </div>

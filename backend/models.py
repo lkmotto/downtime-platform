@@ -72,6 +72,7 @@ class HealthResponse(BaseModel):
 
 class InternalEventPayload(BaseModel):
     """Individual event in the /internal/events batch."""
+
     id: str
     title: str
     description: str = ""
@@ -101,6 +102,7 @@ class InternalEventPayload(BaseModel):
 
 class InternalEventsRequest(BaseModel):
     """Request body for POST /internal/events."""
+
     city: str
     state: str
     source: str = "agent"
@@ -110,6 +112,7 @@ class InternalEventsRequest(BaseModel):
 
 class InternalEventsResponse(BaseModel):
     """Response for POST /internal/events."""
+
     accepted: bool
     events_received: int
     events_scored: int

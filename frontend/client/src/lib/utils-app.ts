@@ -32,7 +32,7 @@ export function formatEventDate(dateStr: string | null): string {
   const d = new Date(dateStr);
   const now = new Date();
   const diffDays = Math.floor((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-  
+
   if (diffDays === 0) return "Today";
   if (diffDays === 1) return "Tomorrow";
   if (diffDays < 7) {

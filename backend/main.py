@@ -11,6 +11,7 @@ API Routes:
 """
 
 from motto_common.sentry_init import init_sentry  # was: import sentry_init
+
 init_sentry(agent_name="downtime-backend")
 
 import asyncio
@@ -23,8 +24,12 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from config import CORS_ORIGINS, HOST, PORT, ENV
 from models import (
-    Event, EventsResponse, CityResponse, HealthResponse,
-    InternalEventsRequest, InternalEventsResponse,
+    Event,
+    EventsResponse,
+    CityResponse,
+    HealthResponse,
+    InternalEventsRequest,
+    InternalEventsResponse,
 )
 from cities import get_city, get_all_cities, CITIES
 from cache import event_cache
@@ -383,7 +388,9 @@ async def ingest_internal_events(body: InternalEventsRequest):
                 tags=ev.tags,
                 score=ev.score,
                 is_featured=ev.is_featured,
-                created_at=datetime.fromisoformat(ev.created_at) if ev.created_at else datetime.utcnow(),
+                created_at=datetime.fromisoformat(ev.created_at)
+                if ev.created_at
+                else datetime.utcnow(),
             )
             converted_events.append(event)
         except Exception as e:
