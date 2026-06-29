@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "app.getdowntime.twa",
+    "sha256_cert_fingerprints": [
+      "77:5C:35:44:5F:7B:EB:53:7C:18:75:40:25:BE:FB:64:69:AB:36:48:52:30:B0:E9:B3:08:82:7A:01:7A:BD:D8"
+    ]
+  }
+}]
